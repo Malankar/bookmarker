@@ -8,7 +8,9 @@ const getAllBookmarks = async (req, res) => {
       data: bookmarks,
     });
   } catch (error) {
-    console.log(error);
+    return res
+      .status(500)
+      .json({ type: "Internal Server Error", message: error.message });
   }
 };
 
@@ -26,7 +28,16 @@ const getBookmarkById = async (req, res) => {
       data,
     });
   } catch (error) {
-    console.log(error);
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        type: error.name,
+        message: error.message,
+      });
+    } else {
+      return res
+        .status(500)
+        .json({ type: "Internal Server Error", message: error.message });
+    }
   }
 };
 
@@ -45,7 +56,16 @@ const createBookmark = async (req, res) => {
       data: bookmark,
     });
   } catch (error) {
-    console.log(error);
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        type: error.name,
+        message: error.message,
+      });
+    } else {
+      return res
+        .status(500)
+        .json({ type: "Internal Server Error", message: error.message });
+    }
   }
 };
 
@@ -60,7 +80,14 @@ const deleteBookmarkById = async (req, res) => {
     }
     return res.status(204).send(); // No content
   } catch (error) {
-    console.log(error);
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        type: error.name,
+        message: error.message,
+      });
+    } else {
+      return res.status(500).json({ error: error.message });
+    }
   }
 };
 
