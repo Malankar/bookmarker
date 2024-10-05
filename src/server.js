@@ -13,6 +13,9 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Use the bookmark routes
+app.use('/v1', bookmarkRoutes);
+
 app.listen(port, () => {
   console.log(`Server listening on port http://localhost:${port}`);
 });
