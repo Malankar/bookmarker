@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const bookmarkRoutes = require('./routes/bookmarkRoutes');
+const errorHandler = require('./utils/errorHandler');
 
 const port = 3000;
 
@@ -15,6 +16,8 @@ app.get('/', (req, res) => {
 
 // Use the bookmark routes
 app.use('/v1', bookmarkRoutes);
+
+app.use(errorHandler)
 
 app.listen(port, () => {
   console.log(`Server listening on port http://localhost:${port}`);
