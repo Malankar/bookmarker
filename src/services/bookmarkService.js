@@ -16,7 +16,7 @@ const getAllBookmarks = async () => {
 
 const getBookmarkById = async (id) => {
   try {
-    await Joi.string().uuid().required().validateAsync(id);
+    await Joi.string().uuid().required().label("id").validateAsync(id);
     const result = await db.select().from(bookmark).where(eq(bookmark.id, id));
     return result.length > 0 ? result[0] : null;
   } catch (error) {
@@ -41,7 +41,7 @@ const createBookmark = async (title, url) => {
 
 const deleteBookmarkById = async (id) => {
   try {
-    await Joi.string().uuid().required().validateAsync(id);
+    await Joi.string().uuid().required().label("id").validateAsync(id);
     const result = await db
       .delete(bookmark)
       .where(eq(bookmark.id, id))

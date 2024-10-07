@@ -1,6 +1,6 @@
 const bookmarkService = require("../services/bookmarkService");
 
-const getAllBookmarks = async (req, res) => {
+const getAllBookmarks = async (req, res, next) => {
   try {
     const bookmarks = await bookmarkService.getAllBookmarks();
     res.status(200).json({
@@ -8,11 +8,11 @@ const getAllBookmarks = async (req, res) => {
       data: bookmarks,
     });
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 };
 
-const getBookmarkById = async (req, res) => {
+const getBookmarkById = async (req, res, next) => {
   try {
     const { id } = req.params;
     const data = await bookmarkService.getBookmarkById(id);
@@ -26,11 +26,11 @@ const getBookmarkById = async (req, res) => {
       data,
     });
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 };
 
-const createBookmark = async (req, res) => {
+const createBookmark = async (req, res, next) => {
   try {
     if (req.headers["content-type"] !== "application/json") {
       return res.status(415).json({
@@ -45,11 +45,11 @@ const createBookmark = async (req, res) => {
       data: bookmark,
     });
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 };
 
-const deleteBookmarkById = async (req, res) => {
+const deleteBookmarkById = async (req, res, next) => {
   const { id } = req.params;
   try {
     const data = await bookmarkService.deleteBookmarkById(id);
@@ -60,7 +60,7 @@ const deleteBookmarkById = async (req, res) => {
     }
     return res.status(204).send(); // No content
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 };
 
