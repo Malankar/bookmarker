@@ -4,7 +4,6 @@ const getAllBookmarks = async (req, res) => {
   try {
     const bookmarks = await bookmarkService.getAllBookmarks();
     res.status(200).json({
-      message: "Bookmarks retrieved successfully",
       data: bookmarks,
     });
   } catch (error) {
@@ -22,7 +21,6 @@ const getBookmarkById = async (req, res) => {
       });
     }
     res.status(200).json({
-      message: "Bookmark retrieved successfully",
       data,
     });
   } catch (error) {
@@ -41,7 +39,6 @@ const createBookmark = async (req, res) => {
     const { title, url } = req.body;
     const { bookmark } = await bookmarkService.createBookmark(title, url);
     return res.status(201).json({
-      message: "Bookmark created successfully",
       data: bookmark,
     });
   } catch (error) {
