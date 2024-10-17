@@ -1,10 +1,9 @@
-const bookmarkService = require("../services/bookmarkService");
+import bookmarkService from "../services/bookmarkService.js";
 
 const getAllBookmarks = async (req, res, next) => {
   try {
     const bookmarks = await bookmarkService.getAllBookmarks();
     res.status(200).json({
-      message: "Bookmarks retrieved successfully",
       data: bookmarks,
     });
   } catch (error) {
@@ -22,7 +21,6 @@ const getBookmarkById = async (req, res, next) => {
       });
     }
     res.status(200).json({
-      message: "Bookmark retrieved successfully",
       data,
     });
   } catch (error) {
@@ -41,7 +39,6 @@ const createBookmark = async (req, res, next) => {
     const { title, url } = req.body;
     const { bookmark } = await bookmarkService.createBookmark(title, url);
     return res.status(201).json({
-      message: "Bookmark created successfully",
       data: bookmark,
     });
   } catch (error) {
@@ -64,9 +61,11 @@ const deleteBookmarkById = async (req, res, next) => {
   }
 };
 
-module.exports = {
+const bookmarkController = {
   getAllBookmarks,
   getBookmarkById,
   createBookmark,
   deleteBookmarkById,
 };
+
+export default bookmarkController;

@@ -1,4 +1,4 @@
-const Joi = require('joi');
+import Joi from 'joi';
 
 const errorHandler = (err, req, res, next) => {
   if (Joi.isError(err)) {
@@ -14,4 +14,4 @@ const errorHandler = (err, req, res, next) => {
   });
 };
 
-module.exports = errorHandler;
+export default errorHandler;
