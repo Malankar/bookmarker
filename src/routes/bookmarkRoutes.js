@@ -1,4 +1,3 @@
-import express from 'express';
 import bookmarkController from '../controllers/bookmarkController.js';
 import rateLimit from 'express-rate-limit';
 
