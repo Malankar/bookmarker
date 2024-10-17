@@ -16,4 +16,10 @@ function ContentTypeMismatchError(message) {
   return error;
 }
 
-export { ConflictError, NotFoundError, ContentTypeMismatchError };
+function UnauthorizedError(message) {
+  const error = new Error(message);
+  error.status = 401;
+  return error;
+}
+
+export { ConflictError, NotFoundError, ContentTypeMismatchError, UnauthorizedError };
