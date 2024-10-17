@@ -1,4 +1,4 @@
-const bookmarkService = require("../services/bookmarkService");
+import bookmarkService from "../services/bookmarkService.js";
 
 const getAllBookmarks = async (req, res) => {
   try {
@@ -61,9 +61,11 @@ const deleteBookmarkById = async (req, res) => {
   }
 };
 
-module.exports = {
+const bookmarkController = {
   getAllBookmarks,
   getBookmarkById,
   createBookmark,
   deleteBookmarkById,
 };
+
+export default bookmarkController;

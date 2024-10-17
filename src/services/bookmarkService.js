@@ -1,9 +1,9 @@
-const { v4: uuidv4 } = require("uuid");
-const { db } = require("../db/db");
-const { bookmark } = require("../db/schema");
-const { eq } = require("drizzle-orm");
-const { bookmarkSchema } = require("../utils/joiSchema");
-const Joi = require("joi");
+import { v4 as uuidv4 } from "uuid";
+import { db } from "../db/db.js";
+import { bookmark } from "../db/schema.js";
+import { eq } from "drizzle-orm";
+import { bookmarkSchema } from "../utils/joiSchema.js";
+import Joi from "joi";
 
 const getAllBookmarks = async () => {
   try {
@@ -52,9 +52,11 @@ const deleteBookmarkById = async (id) => {
   }
 };
 
-module.exports = {
+const bookmarkService = {
   getAllBookmarks,
   getBookmarkById,
   createBookmark,
   deleteBookmarkById,
 };
+
+export default bookmarkService;

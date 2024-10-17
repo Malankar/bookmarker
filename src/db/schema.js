@@ -1,4 +1,4 @@
-const { pgTable, text, varchar, uuid } = require('drizzle-orm/pg-core');
+import { pgTable, text, varchar, uuid } from 'drizzle-orm/pg-core';
 
 const bookmark = pgTable('bookmark', {
   id: uuid('id').primaryKey(),
@@ -6,4 +6,4 @@ const bookmark = pgTable('bookmark', {
   url: varchar('url', { length: 256 }),
 });
 
-module.exports = { bookmark };
+export { bookmark };
