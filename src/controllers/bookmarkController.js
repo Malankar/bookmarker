@@ -1,4 +1,5 @@
 import bookmarkService from "../services/bookmarkService.js";
+import { ContentTypeMismatchError } from "../utils/customError.js";
 
 const getAllBookmarks = async (req, res, next) => {
   try {
@@ -31,10 +32,7 @@ const getBookmarkById = async (req, res, next) => {
 const createBookmark = async (req, res, next) => {
   try {
     if (req.headers["content-type"] !== "application/json") {
-      return res.status(415).json({
-        type: "Content Type Mismatch",
-        message: "Content type must be application/json",
-      });
+      throw ContentTypeMismatchError("Content-Type must be application/json");
     }
     const { title, url } = req.body;
     const { bookmark } = await bookmarkService.createBookmark(title, url);
@@ -49,13 +47,8 @@ const createBookmark = async (req, res, next) => {
 const deleteBookmarkById = async (req, res, next) => {
   const { id } = req.params;
   try {
-    const data = await bookmarkService.deleteBookmarkById(id);
-    if (!data) {
-      return res.status(404).json({
-        message: "Bookmark not found",
-      });
-    }
-    return res.status(204).send(); // No content
+    await bookmarkService.deleteBookmarkById(id);
+    return res.status(204).send();
   } catch (error) {
     next(error);
   }
