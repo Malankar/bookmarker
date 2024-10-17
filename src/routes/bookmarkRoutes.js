@@ -1,7 +1,6 @@
-const express = require('express');
-const router = express.Router();
-const bookmarkController = require('../controllers/bookmarkController');
-const { default: rateLimit } = require('express-rate-limit');
+import express from 'express';
+import bookmarkController from '../controllers/bookmarkController.js';
+import rateLimit from 'express-rate-limit';
 
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutes
@@ -20,4 +19,4 @@ router.get('/bookmarks/:id', bookmarkController.getBookmarkById);
 router.post('/bookmarks', limiter, bookmarkController.createBookmark);
 router.delete('/bookmarks/:id', limiter, bookmarkController.deleteBookmarkById);
 
-module.exports = router;
+export default router;

@@ -1,9 +1,9 @@
-const { v4: uuidv4 } = require("uuid");
-const { db } = require("../db/db");
-const { bookmark } = require("../db/schema");
-const { eq } = require("drizzle-orm");
-const { bookmarkSchema } = require("../utils/joiSchema");
-const Joi = require("joi");
+import { v4 as uuidv4 } from "uuid";
+import { db } from "../db/db.js";
+import { bookmark } from "../db/schema.js";
+import { eq } from "drizzle-orm";
+import { bookmarkSchema } from "../utils/joiSchema.js";
+import Joi from "joi";
 
 const getAllBookmarks = async () => {
   try {
@@ -26,13 +26,26 @@ const getBookmarkById = async (id) => {
 
 const createBookmark = async (title, url) => {
   try {
+    // Validate input data
     await bookmarkSchema.validateAsync({ title, url });
+
+    // Check for existing bookmark with the same URL
+    const existingBookmark = await db.select().from(bookmark).where(eq(bookmark.url, url));
+
+    if (existingBookmark.length) {
+      throw new Error('Bookmark with this URL already exists');
+    }
+
+    // Generate a new ID for the bookmark
     const id = uuidv4();
 
+    // Insert the new bookmark into the database
     const newBookmark = await db
       .insert(bookmark)
       .values({ id, title, url })
       .returning();
+
+    // Return the newly created bookmark
     return newBookmark[0]; // Assuming .returning() gives an array
   } catch (error) {
     throw error;
@@ -52,9 +65,11 @@ const deleteBookmarkById = async (id) => {
   }
 };
 
-module.exports = {
+const bookmarkService = {
   getAllBookmarks,
   getBookmarkById,
   createBookmark,
   deleteBookmarkById,
 };
+
+export default bookmarkService;
