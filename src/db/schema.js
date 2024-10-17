@@ -6,4 +6,10 @@ const bookmark = pgTable('bookmark', {
   url: varchar('url', { length: 256 }),
 });
 
-export { bookmark };
+const user = pgTable('user', {
+  id: uuid('id').primaryKey(),
+  username: text('username'),
+  password: text('password'),
+});
+
+export { bookmark, user };

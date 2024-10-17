@@ -5,4 +5,9 @@ const bookmarkSchema = Joi.object({
   url: Joi.string().uri().required()
 });
 
+const userSchema = Joi.object({
+  username: Joi.string().min(3).max(255).required(),
+  password: Joi.string().min(255).required()
+});
+
 export { bookmarkSchema };
