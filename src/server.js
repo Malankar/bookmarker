@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import bookmarkRoutes from './routes/bookmarkRoutes.js';
-import errorHandler from './utils/errorHandler.js';
+import errorHandler from './middleware/errorHandler.js';
 
 const app = express();
 const port = 3000;
