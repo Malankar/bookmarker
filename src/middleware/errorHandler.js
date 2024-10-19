@@ -4,12 +4,15 @@ const errorHandler = (err, req, res, next) => {
   let status = err.status ? err.status : 500;
   let errorResponse = {};
   if (Joi.isError(err)) {
+    console.log(err)
     errorResponse = {
       message: "Invalid request data. Please review the request and try again.",
       errors: err.details.map((error) => {
+        const [msg, code] = error.message.split(",");
         return {
-          message: error.message,
+          message: msg,
           field: error.context.label,
+          code: code || "UNKNOWN_CODE",
         };
       }),
     };
