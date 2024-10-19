@@ -12,7 +12,14 @@ const getAllBookmarks = async () => {
 };
 
 const getBookmarkById = async (id) => {
-  await Joi.string().uuid().required().label("id").validateAsync(id);
+  await Joi.string()
+    .uuid()
+    .required()
+    .label("id")
+    .messages({
+      "string.guid": "Must be a valid GUID",
+    })
+    .validateAsync(id);
   const result = await db.select().from(bookmark).where(eq(bookmark.id, id));
   if (result.length === 0) {
     throw NotFoundError("Bookmark not found");
@@ -22,7 +29,7 @@ const getBookmarkById = async (id) => {
 
 const createBookmark = async (title, url) => {
   // Validate input data
-  await bookmarkSchema.validateAsync({ title, url });
+  await bookmarkSchema.validateAsync({ title, url }, { abortEarly: false });
 
   // Check for existing bookmark with the same URL
   const existingBookmark = await db
@@ -40,11 +47,18 @@ const createBookmark = async (title, url) => {
     .values({ id, title, url })
     .returning();
 
-  return newBookmark[0]; 
+  return newBookmark[0];
 };
 
 const deleteBookmarkById = async (id) => {
-  await Joi.string().uuid().required().label("id").validateAsync(id);
+  await Joi.string()
+    .uuid()
+    .required()
+    .label("id")
+    .messages({
+      "string.guid": "Must be a valid GUID",
+    })
+    .validateAsync(id);
   const result = await db
     .delete(bookmark)
     .where(eq(bookmark.id, id))
