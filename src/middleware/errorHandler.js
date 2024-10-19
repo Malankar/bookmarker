@@ -10,7 +10,6 @@ const errorHandler = (err, req, res, next) => {
         return {
           message: error.message,
           field: error.context.label,
-          code: error.context.errorCode,
         };
       }),
     };
