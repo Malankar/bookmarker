@@ -2,6 +2,7 @@ import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import bookmarkRoutes from "./routes/bookmarkRoutes.js";
+import errorHandler from './middleware/errorHandler.js';
 import session from "express-session";
 import dotenv from "dotenv";
 dotenv.config();
@@ -37,6 +38,8 @@ app.get("/", (req, res) => {
 
 // Use the bookmark routes
 app.use("/v1", bookmarkRoutes);
+
+app.use(errorHandler)
 
 app.listen(port, () => {
   console.log(`Server listening on port http://localhost:${port}`);
