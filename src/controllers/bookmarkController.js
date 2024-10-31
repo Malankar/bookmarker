@@ -12,11 +12,6 @@ const getAllBookmarks = asyncHandler(async (req, res) => {
 const getBookmarkById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const data = await bookmarkService.getBookmarkById(id);
-  if (!data) {
-    return res.status(404).json({
-      message: "Bookmark not found",
-    });
-  }
   res.status(200).json({
     data,
   });
@@ -27,7 +22,7 @@ const createBookmark = asyncHandler(async (req, res) => {
     throw ContentTypeMismatchError("Content-Type must be application/json");
   }
   const { title, url } = req.body;
-  const { bookmark } = await bookmarkService.createBookmark(title, url);
+  const bookmark = await bookmarkService.createBookmark(title, url);
   return res.status(201).json({
     data: bookmark,
   });
