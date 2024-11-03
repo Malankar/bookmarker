@@ -13,7 +13,7 @@ export default defineConfig({
 			'**/test/unit-test/**/*.test.js',
 			'**/test/**/*.test.js',
 		],
-		exclude: [...configDefaults.exclude, '**/build/**', '**/api-test/**'],
+		exclude: [...configDefaults.exclude, '**/build/**', '**/src/public'],
 		coverage: {
 			enabled: true,
 			reporters: ['text', 'lcov'],
@@ -27,7 +27,7 @@ export default defineConfig({
 				autoUpdate: true,
 			},
 			include: ['**/src/**/*.js'],
-			exclude: [...configDefaults.coverage.exclude, '**/build/**'],
+			exclude: [...configDefaults.coverage.exclude, '**/build/**', '**/src/public'],
 		},
 		bail: 1,
 	},

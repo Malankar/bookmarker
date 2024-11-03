@@ -1,7 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import bookmarkService from "../../src/services/bookmarkService";
 import { db } from "../../src/db/db.js";
-import { bookmark } from "../../src/db/schema.js";
 
 vi.mock("../../src/db/db.js");
 
