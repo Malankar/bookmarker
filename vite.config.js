@@ -10,13 +10,12 @@ export default defineConfig({
 			'default',
 		],
 		include: [
-			'**/test/unit-test/**/*.test.js',
 			'**/test/**/*.test.js',
 		],
 		exclude: [...configDefaults.exclude, '**/build/**', '**/src/public'],
 		coverage: {
 			enabled: true,
-			reporters: ['text', 'lcov'],
+			reporters: ['lcov'],
 			reportsDirectory: './coverage',
 			thresholds: {
 				lines: 100,
