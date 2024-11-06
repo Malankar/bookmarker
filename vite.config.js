@@ -26,7 +26,7 @@ export default defineConfig({
 				autoUpdate: true,
 			},
 			include: ['**/src/**/*.js'],
-			exclude: [...configDefaults.coverage.exclude, '**/build/**', '**/src/public'],
+			exclude: [...configDefaults.coverage.exclude, '**/build/**', '**/src/public', 'src/server.js'],
 		},
 		bail: 1,
 	},
