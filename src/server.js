@@ -6,6 +6,7 @@ import errorHandler from './middleware/errorHandler.js';
 import authPkg from 'express-openid-connect';
 const { auth, requiresAuth } = authPkg;
 import dotenv from "dotenv";
+import { authHandler } from './middleware/authHandler.js';
 
 dotenv.config();
 
@@ -23,22 +24,40 @@ const config = {
   secret: process.env.AUTH_SECRET,
   baseURL: process.env.BASE_URL,
   clientID: process.env.AUTH_CLIENT_ID,
-  issuerBaseURL: process.env.AUTH_ISSUER_BASE_URL
+  issuerBaseURL: process.env.AUTH_ISSUER_BASE_URL,
+  routes: {
+    login: false,
+  },
 };
 
 app.use(auth(config));
 
-app.use(requiresAuth())
-
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Serve the index.html file
-app.get('/', (req, res) => {
+app.get('/', requiresAuth(), (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+app.get('/login', (req, res) =>{
+  if (req.oidc.isAuthenticated()) {
+    return res.redirect('/profile');
+  }
+  res.oidc.login({
+    returnTo: '/profile',
+    authorizationParams: {
+      redirect_uri: 'http://localhost:3000/callback',
+    },
+  })
+});
+
+// Serve the index.html file
+app.get('/profile', requiresAuth(), (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'profile.html'));
+});
+
 // Use the bookmark routes
-app.use('/v1', bookmarkRoutes);
+app.use('/v1', authHandler(), bookmarkRoutes);
 
 app.use(errorHandler)
 
