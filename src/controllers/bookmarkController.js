@@ -3,7 +3,8 @@ import bookmarkService from "../services/bookmarkService.js";
 import { ContentTypeMismatchError } from "../utils/customError.js";
 
 const getAllBookmarks = asyncHandler(async (req, res) => {
-  const bookmarks = await bookmarkService.getAllBookmarks();
+  const userId = req.oidc.user.sid;
+  const bookmarks = await bookmarkService.getAllBookmarks(userId);
   res.status(200).json({
     data: bookmarks,
   });
@@ -11,7 +12,8 @@ const getAllBookmarks = asyncHandler(async (req, res) => {
 
 const getBookmarkById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const data = await bookmarkService.getBookmarkById(id);
+  const userId = req.oidc.user.sid;
+  const data = await bookmarkService.getBookmarkById(id, userId);
   if (!data) {
     return res.status(404).json({
       message: "Bookmark not found",
@@ -27,7 +29,8 @@ const createBookmark = asyncHandler(async (req, res) => {
     throw ContentTypeMismatchError("Content-Type must be application/json");
   }
   const { title, url } = req.body;
-  const { bookmark } = await bookmarkService.createBookmark(title, url);
+  const userId = req.oidc.user.sid;
+  const { bookmark } = await bookmarkService.createBookmark(title, url, userId);
   return res.status(201).json({
     data: bookmark,
   });
@@ -35,7 +38,8 @@ const createBookmark = asyncHandler(async (req, res) => {
 
 const deleteBookmarkById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  await bookmarkService.deleteBookmarkById(id);
+  const userId = req.oidc.user.sid;
+  await bookmarkService.deleteBookmarkById(id, userId);
   return res.status(204).send();
 });
 
