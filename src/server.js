@@ -51,13 +51,17 @@ app.get('/login', (req, res) =>{
   })
 });
 
-// Serve the index.html file
+// Serve the profile.html file
 app.get('/profile', requiresAuth(), (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'profile.html'));
 });
 
 // Use the bookmark routes
 app.use('/v1', authHandler(), bookmarkRoutes);
+
+app.use('/v1/user', authHandler(), (req, res) => {
+  res.json(req.oidc.user);
+})
 
 app.use(errorHandler)
 
