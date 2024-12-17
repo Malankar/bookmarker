@@ -19,6 +19,7 @@ const limiter = rateLimit({
 router.get('/bookmarks', bookmarkController.getAllBookmarks);
 router.get('/bookmarks/:id', bookmarkController.getBookmarkById);
 router.post('/bookmarks', limiter, bookmarkController.createBookmark);
+router.put('/bookmarks/:id', limiter, bookmarkController.updateBookmarkById);
 router.delete('/bookmarks/:id', limiter, bookmarkController.deleteBookmarkById);
 
 export default router;

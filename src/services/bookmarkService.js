@@ -56,6 +56,28 @@ const createBookmark = async (title, url, userId) => {
   return newBookmark[0];
 };
 
+const updateBookmarkById = async (id, title, url, userId) => {
+  await Joi.string()
+    .uuid()
+    .required()
+    .label("id")
+    .messages({
+      "string.guid": "Must be a valid GUID",
+    })
+    .validateAsync(id);
+  await bookmarkSchema.validateAsync({ title, url }, { abortEarly: false });
+
+  const result = await db
+    .update(bookmark)
+    .set({ title, url })
+    .where(and(eq(bookmark.id, id), eq(bookmark.userId, userId)))
+    .returning();
+  if (result.length === 0) {
+    throw NotFoundError("Bookmark not found");
+  }
+  return result[0];
+};
+
 const deleteBookmarkById = async (id, userId) => {
   await Joi.string()
     .uuid()
@@ -79,6 +101,7 @@ const bookmarkService = {
   getAllBookmarks,
   getBookmarkById,
   createBookmark,
+  updateBookmarkById,
   deleteBookmarkById,
 };
 
