@@ -4,9 +4,7 @@ import { ContentTypeMismatchError } from "../utils/customError.js";
 
 const getAllBookmarks = asyncHandler(async (req, res) => {
   const bookmarks = await bookmarkService.getAllBookmarks();
-  res.status(200).json({
-    data: bookmarks,
-  });
+  res.status(200).json(bookmarks);
 });
 
 const getBookmarkById = asyncHandler(async (req, res) => {
@@ -17,9 +15,7 @@ const getBookmarkById = asyncHandler(async (req, res) => {
       message: "Bookmark not found",
     });
   }
-  res.status(200).json({
-    data,
-  });
+  res.status(200).json(data);
 });
 
 const createBookmark = asyncHandler(async (req, res) => {
@@ -28,9 +24,7 @@ const createBookmark = asyncHandler(async (req, res) => {
   }
   const { title, url } = req.body;
   const { bookmark } = await bookmarkService.createBookmark(title, url);
-  return res.status(201).json({
-    data: bookmark,
-  });
+  return res.status(201).json(bookmark);
 });
 
 const deleteBookmarkById = asyncHandler(async (req, res) => {

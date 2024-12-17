@@ -45,7 +45,7 @@ async function displayBookmarks() {
   const response = await fetch("/v1/bookmarks");
   const bookmarks = await response.json();
   bookmarksList.innerHTML = "";
-  bookmarks?.data?.forEach((bookmark) => {
+  bookmarks?.forEach((bookmark) => {
     let bookmarkId = bookmark.id;
     bookmarksList.innerHTML += `
       <div class="bookmark">

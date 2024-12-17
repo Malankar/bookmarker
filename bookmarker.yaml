@@ -1,0 +1,186 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Bookmarker
+  license:
+    name: MIT
+servers:
+  - url: http://localhost:3000/v1
+    description: Development server
+paths:
+  /bookmarks:
+    get:
+      summary: List all bookmarks
+      operationId: listBookmarks
+      tags:
+        - bookmarks
+      responses:
+        200:
+          description: An array of bookmarks
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/Bookmarks"
+        500:
+          description: Internal server error. Please try again later.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+    post:
+      summary: Create a bookmark
+      operationId: createBookmark
+      tags:
+        - bookmarks
+      responses:
+        201:
+          description: Null response
+        400:
+          description: Invalid request data
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        415:
+          description: Content-Type must be application/json
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/UnsupportedMediaTypeError"
+        500:
+          description: Internal server error. Please try again later.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /bookmarks/{id}:
+    get:
+      summary: Info for a specific bookmark
+      operationId: showBookmarkById
+      tags:
+        - bookmarks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the bookmark to retrieve
+          schema:
+            type: string
+      responses:
+        200:
+          description: Bookmark info of the specified id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bookmark"
+        400:
+          description: Invalid request data
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        404:
+          description: Invalid request data
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        500:
+          description: Internal server error. Please try again later.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+    delete:
+      summary: Delete specific bookmark
+      operationId: deleteBookmarkById
+      tags:
+        - bookmarks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the bookmark to retrieve
+          schema:
+            type: string
+      responses:
+        200:
+          description: Bookmark info of the specified id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bookmark"
+        400:
+          description: Invalid request data
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        404:
+          description: Invalid request data
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        500:
+          description: Internal server error. Please try again later.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+components:
+  schemas:
+    Bookmark:
+      required:
+        - id
+        - title
+        - url
+      properties:
+          id:
+            type: string
+          title:
+            type: string
+          url:
+            type: string
+    Bookmarks:
+      type: array
+      items:
+        $ref: "#/components/schemas/Bookmark"
+    BadRequestError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Invalid request data. Please review the request and try again."
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Must be a valid GUID"
+              field:
+                type: string
+                example: "id"
+              code:
+                type: string
+                example: "INVALID_UUID"
+    UnsupportedMediaTypeError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Content-Type must be application/json"
+    InternalServerError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Internal server error. Please try again later."
+    NotFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "The requested resource was not found."
