@@ -7,6 +7,8 @@ info:
 servers:
   - url: http://localhost:3000/v1
     description: Development server
+security:
+  - BearerAuth: []
 paths:
   /bookmarks:
     get:
@@ -129,6 +131,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/InternalServerError"
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
   schemas:
     Bookmark:
       required:
