@@ -18,7 +18,7 @@ paths:
         200:
           description: An array of bookmarks
           content:
-            application/json:    
+            application/json:
               schema:
                 $ref: "#/components/schemas/Bookmarks"
         500:
@@ -32,21 +32,41 @@ paths:
       operationId: createBookmark
       tags:
         - bookmarks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                url:
+                  type: string
+              required:
+                - title
+                - url
       responses:
         201:
           description: Null response
         400:
           description: Invalid request data
           content:
-            application/json:    
+            application/json:
               schema:
                 $ref: "#/components/schemas/BadRequestError"
         415:
           description: Content-Type must be application/json
           content:
-            application/json:    
+            application/json:
               schema:
                 $ref: "#/components/schemas/UnsupportedMediaTypeError"
+        409:
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConflictError"
         500:
           description: Internal server error. Please try again later.
           content:
@@ -76,15 +96,72 @@ paths:
         400:
           description: Invalid request data
           content:
-            application/json:    
+            application/json:
               schema:
                 $ref: "#/components/schemas/BadRequestError"
         404:
           description: Invalid request data
           content:
-            application/json:    
+            application/json:
               schema:
                 $ref: "#/components/schemas/NotFoundError"
+        500:
+          description: Internal server error. Please try again later.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+    put:
+      summary: Update specific bookmark
+      operationId: updateBookmarkById
+      tags:
+        - bookmarks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the bookmark to update
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                url:
+                  type: string
+              required:
+                - title
+                - url
+      responses:
+        200:
+          description: Bookmark info of the updated id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bookmark"
+        400:
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        404:
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        415:
+          description: Content-Type must be application/json
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnsupportedMediaTypeError"
         500:
           description: Internal server error. Please try again later.
           content:
@@ -105,7 +182,7 @@ paths:
             type: string
       responses:
         200:
-          description: Bookmark info of the specified id
+          description: Bookmark info of the deleted id
           content:
             application/json:
               schema:
@@ -113,13 +190,13 @@ paths:
         400:
           description: Invalid request data
           content:
-            application/json:    
+            application/json:
               schema:
                 $ref: "#/components/schemas/BadRequestError"
         404:
           description: Invalid request data
           content:
-            application/json:    
+            application/json:
               schema:
                 $ref: "#/components/schemas/NotFoundError"
         500:
@@ -140,12 +217,12 @@ components:
         - title
         - url
       properties:
-          id:
-            type: string
-          title:
-            type: string
-          url:
-            type: string
+        id:
+          type: string
+        title:
+          type: string
+        url:
+          type: string
     Bookmarks:
       type: array
       items:
@@ -188,3 +265,9 @@ components:
         message:
           type: string
           example: "The requested resource was not found."
+    ConflictError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "The request could not be completed due to a conflict with the current state of the target resource."
