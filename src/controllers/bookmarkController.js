@@ -37,7 +37,7 @@ const updateBookmarkById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const userId = req.user.sub.split("|")[1];
   const { title, url } = req.body;
-  const { bookmark } = await bookmarkService.updateBookmarkById(
+  const bookmark = await bookmarkService.updateBookmarkById(
     id,
     title,
     url,
