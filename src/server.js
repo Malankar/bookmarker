@@ -7,6 +7,8 @@ import authPkg from "express-openid-connect";
 const { auth, requiresAuth } = authPkg;
 import dotenv from "dotenv";
 import { authHandler } from "./middleware/authHandler.js";
+import YAML from "yamljs";
+import swaggerUi from "swagger-ui-express";
 
 dotenv.config();
 
@@ -15,6 +17,7 @@ const port = 3000;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const swaggerDocument = YAML.load("src/docs/bookmarker.yaml");
 
 app.use(express.json());
 
@@ -39,7 +42,7 @@ app.use(auth(config));
 app.use(express.static(path.join(__dirname, "public")));
 
 // Serve the index.html file
-app.get("/", requiresAuth(), (req, res) => {
+app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
@@ -73,6 +76,8 @@ app.use("/v1", authHandler(), bookmarkRoutes);
 app.use("/v1/user", authHandler(), (req, res) => {
   res.json({ user: { nickname: req.user.nickname } });
 });
+
+app.use("/api-docs", authHandler(), swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Auth error handling middleware
 app.use((err, req, res, next) => {
