@@ -66,8 +66,8 @@ async function fetchUserData() {
   try {
       const response = await fetch('/v1/user');
       const data = await response.json();
-      userData = data;
-      profilePhoto.src = `https://robohash.org/${data.nickname}?set=set3`;
+      userData = data.user;
+      profilePhoto.src = `https://robohash.org/${userData.nickname}?set=set3`;
       profilePhoto.style.display = 'block';
   } catch (error) {
       console.error('Error fetching user data:', error);
