@@ -22,11 +22,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Bookmarks"
         500:
-          description: Internal server error. Please try again later.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerError"
+          $ref: "#/components/responses/InternalServerError"
     post:
       summary: Create a bookmark
       operationId: createBookmark
@@ -50,29 +46,13 @@ paths:
         201:
           description: Null response
         400:
-          description: Invalid request data
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BadRequestError"
+          $ref: "#/components/responses/BadRequestError"
         415:
-          description: Content-Type must be application/json
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/UnsupportedMediaTypeError"
+          $ref: "#/components/responses/UnsupportedMediaTypeError"
         409:
-          description: Invalid request data
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ConflictError"
+          $ref: "#/components/responses/ConflictError"
         500:
-          description: Internal server error. Please try again later.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerError"
+          $ref: "#/components/responses/InternalServerError"
   /bookmarks/{id}:
     get:
       summary: Info for a specific bookmark
@@ -94,23 +74,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/Bookmark"
         400:
-          description: Invalid request data
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BadRequestError"
+          $ref: "#/components/responses/BadRequestError"
         404:
-          description: Invalid request data
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/NotFoundError"
+          $ref: "#/components/responses/NotFoundError"
         500:
-          description: Internal server error. Please try again later.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerError"
+          $ref: "#/components/responses/InternalServerError"
     put:
       summary: Update specific bookmark
       operationId: updateBookmarkById
@@ -145,29 +113,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/Bookmark"
         400:
-          description: Invalid request data
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BadRequestError"
+          $ref: "#/components/responses/BadRequestError"
         404:
-          description: Invalid request data
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/NotFoundError"
+          $ref: "#/components/responses/NotFoundError"
         415:
-          description: Content-Type must be application/json
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/UnsupportedMediaTypeError"
+          $ref: "#/components/responses/UnsupportedMediaTypeError"
         500:
-          description: Internal server error. Please try again later.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerError"
+          $ref: "#/components/responses/InternalServerError"
     delete:
       summary: Delete specific bookmark
       operationId: deleteBookmarkById
@@ -188,23 +140,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/Bookmark"
         400:
-          description: Invalid request data
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BadRequestError"
+          $ref: "#/components/responses/BadRequestError"
         404:
-          description: Invalid request data
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/NotFoundError"
+          $ref: "#/components/responses/NotFoundError"
         500:
-          description: Internal server error. Please try again later.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerError"
+          $ref: "#/components/responses/InternalServerError"
 components:
   securitySchemes:
     BearerAuth:
@@ -271,3 +211,34 @@ components:
         message:
           type: string
           example: "The request could not be completed due to a conflict with the current state of the target resource."
+  responses:
+    BadRequestError:
+      description: Invalid request data
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BadRequestError"
+    UnsupportedMediaTypeError:
+      description: Content-Type must be application/json
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UnsupportedMediaTypeError"
+    InternalServerError:
+      description: Internal server error. Please try again later.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/InternalServerError"
+    NotFoundError:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/NotFoundError"
+    ConflictError:
+      description: The request could not be completed due to a conflict with the current state of the target resource.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ConflictError"
