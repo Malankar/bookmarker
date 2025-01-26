@@ -5,6 +5,37 @@ body {
   padding: 0;
 }
 
+.header {
+  display: flex;
+  max-width: 700px;
+  margin: 50px auto;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#userProfile {
+  display: flex;
+  align-items: center;
+  background: black;
+  border-radius: 30px;
+}
+
+.profile-photo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.logout {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 10px;
+  text-decoration: none;
+}
+
 .container {
   max-width: 700px;
   margin: 50px auto;
@@ -36,15 +67,11 @@ form input {
 form button {
   padding: 10px;
   font-size: 16px;
-  background-color: #5c9ded;
+  background-color: #0073ff;
   color: white;
   border: none;
   cursor: pointer;
   border-radius: 10px;
-}
-
-form button:hover {
-  background-color: #4a82d8;
 }
 
 #bookmarksList a {
