@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import { db } from "../db/db.js";
 import { bookmark } from "../db/schema.js";
 import { and, eq } from "drizzle-orm";
-import { bookmarkSchema } from "../utils/joiSchema.js";
+import { bookmarkSchema, bookmarkUpdateSchema } from "../utils/joiSchema.js";
 import Joi from "joi";
 import { ConflictError, NotFoundError } from "../utils/customError.js";
 
@@ -65,11 +65,16 @@ const updateBookmarkById = async (id, title, url, userId) => {
       "string.guid": "Must be a valid GUID",
     })
     .validateAsync(id);
-  await bookmarkSchema.validateAsync({ title, url }, { abortEarly: false });
+
+  const updateData = {};
+  if (title !== undefined) updateData.title = title;
+  if (url !== undefined) updateData.url = url;
+
+  await bookmarkUpdateSchema.validateAsync(updateData, { abortEarly: false });
 
   const result = await db
     .update(bookmark)
-    .set({ title, url })
+    .set(updateData)
     .where(and(eq(bookmark.id, id), eq(bookmark.userId, userId)))
     .returning();
   if (result.length === 0) {
@@ -77,7 +82,6 @@ const updateBookmarkById = async (id, title, url, userId) => {
   }
   return result[0];
 };
-
 const deleteBookmarkById = async (id, userId) => {
   await Joi.string()
     .uuid()
