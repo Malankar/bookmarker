@@ -1,5 +1,8 @@
 import bookmarkController from '../controllers/bookmarkController.js';
 import rateLimit from 'express-rate-limit';
+import express from 'express';
+
+const router = express.Router();
 
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutes
