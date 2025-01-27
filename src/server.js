@@ -7,8 +7,9 @@ import authPkg from "express-openid-connect";
 const { auth, requiresAuth } = authPkg;
 import dotenv from "dotenv";
 import { authHandler } from "./middleware/authHandler.js";
-import YAML from "yamljs";
+import YAML from "yaml";
 import swaggerUi from "swagger-ui-express";
+import { readFileSync } from "fs";
 
 dotenv.config();
 
@@ -17,7 +18,8 @@ const port = 3000;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const swaggerDocument = YAML.load("src/docs/bookmarker.yaml");
+const file = readFileSync("src/docs/bookmarker.yaml", "utf8");
+const swaggerDocument = YAML.parse(file);
 
 app.use(express.json());
 
@@ -77,7 +79,12 @@ app.use("/v1/user", authHandler(), (req, res) => {
   res.json({ user: { nickname: req.user.nickname } });
 });
 
-app.use("/api-docs", authHandler(), swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use(
+  "/api-docs",
+  authHandler(),
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument)
+);
 
 // Auth error handling middleware
 app.use((err, req, res, next) => {

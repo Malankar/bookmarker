@@ -20,7 +20,7 @@
     "postgres": "^3.4.4",
     "swagger-ui-express": "^5.0.1",
     "uuid": "^10.0.0",
-    "yamljs": "^0.3.0"
+    "yaml": "^2.7.0"
   },
   "devDependencies": {
     "dotenv": "^16.4.5",
