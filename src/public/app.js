@@ -1,3 +1,5 @@
+let userData = null;
+
 // DOM elements
 const bookmarkForm = document.getElementById("bookmarkForm");
 const bookmarksList = document.getElementById("bookmarksList");
@@ -42,18 +44,47 @@ function addBookmark(e) {
 
 // Display bookmarks
 async function displayBookmarks() {
+  if(!userData){
+    fetchUserData();
+  }
+
   const response = await fetch("/v1/bookmarks");
   const bookmarks = await response.json();
   bookmarksList.innerHTML = "";
-  bookmarks?.data?.forEach((bookmark) => {
+  bookmarks?.forEach((bookmark) => {
     let bookmarkId = bookmark.id;
-    bookmarksList.innerHTML += `
-      <div class="bookmark">
-        <a href="${bookmark.url}" target="_blank" id="${bookmarkId}">${bookmark.title}</a>
-        <button id="deleteButton" onclick="deleteBookmark('${bookmarkId}')">Delete</button>
-      </div>
-    `;
+    const bookmarkDiv = document.createElement('div');
+    bookmarkDiv.className = 'bookmark';
+    
+    const bookmarkLink = document.createElement('a');
+    bookmarkLink.href = bookmark.url;
+    bookmarkLink.target = '_blank';
+    bookmarkLink.id = bookmarkId;
+    bookmarkLink.textContent = bookmark.title;
+    
+    const deleteButton = document.createElement('button');
+    deleteButton.id = 'deleteButton';
+    deleteButton.textContent = 'Delete';
+    deleteButton.onclick = function() {
+        deleteBookmark(bookmarkId);
+    };
+    
+    bookmarkDiv.appendChild(bookmarkLink);
+    bookmarkDiv.appendChild(deleteButton);
+    bookmarksList.appendChild(bookmarkDiv);
   });
+}
+
+async function fetchUserData() {
+  try {
+      const response = await fetch('/v1/user');
+      const data = await response.json();
+      userData = data.user;
+      profilePhoto.src = `https://robohash.org/${userData.nickname}?set=set3`;
+      profilePhoto.style.display = 'block';
+  } catch (error) {
+      console.error('Error fetching user data:', error);
+  }
 }
 
 // Delete bookmark
