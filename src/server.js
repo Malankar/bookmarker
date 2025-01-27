@@ -7,7 +7,8 @@ import authPkg from "express-openid-connect";
 const { auth, requiresAuth } = authPkg;
 import dotenv from "dotenv";
 import { authHandler } from "./middleware/authHandler.js";
-import helmet from 'helmet';
+import helmet from "helmet";
+import rateLimiter from "./middleware/rateLimiter.js";
 
 dotenv.config();
 
@@ -17,15 +18,17 @@ const port = 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      imgSrc: ["'self'", 'https://robohash.org'],
-    }
-  }
-}));
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        imgSrc: ["'self'", "https://robohash.org"],
+      },
+    },
+  })
+);
 app.use(express.json());
-
+app.use(rateLimiter);
 const config = {
   authRequired: false,
   auth0Logout: true,
