@@ -53,12 +53,25 @@ async function displayBookmarks() {
   bookmarksList.innerHTML = "";
   bookmarks?.forEach((bookmark) => {
     let bookmarkId = bookmark.id;
-    bookmarksList.innerHTML += `
-      <div class="bookmark">
-        <a href="${bookmark.url}" target="_blank" id="${bookmarkId}">${bookmark.title}</a>
-        <button id="deleteButton" onclick="deleteBookmark('${bookmarkId}')">Delete</button>
-      </div>
-    `;
+    const bookmarkDiv = document.createElement('div');
+    bookmarkDiv.className = 'bookmark';
+    
+    const bookmarkLink = document.createElement('a');
+    bookmarkLink.href = bookmark.url;
+    bookmarkLink.target = '_blank';
+    bookmarkLink.id = bookmarkId;
+    bookmarkLink.textContent = bookmark.title;
+    
+    const deleteButton = document.createElement('button');
+    deleteButton.id = 'deleteButton';
+    deleteButton.textContent = 'Delete';
+    deleteButton.onclick = function() {
+        deleteBookmark(bookmarkId);
+    };
+    
+    bookmarkDiv.appendChild(bookmarkLink);
+    bookmarkDiv.appendChild(deleteButton);
+    bookmarksList.appendChild(bookmarkDiv);
   });
 }
 

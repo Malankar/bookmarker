@@ -17,7 +17,13 @@ const port = 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      imgSrc: ["'self'", 'https://robohash.org'],
+    }
+  }
+}));
 app.use(express.json());
 
 const config = {
