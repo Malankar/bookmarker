@@ -10,34 +10,15 @@ describe("errorHandler middleware", () => {
     json: vi.fn(),
   };
 
-  it("should handle Joi validation errors", () => {
+  it("should handle multiple Joi validation errors", () => {
     const joiError = new Joi.ValidationError("Validation error", [
       {
         message: "Invalid email,INVALID_EMAIL",
         context: { label: "email" },
       },
-    ]);
-
-    errorHandler(joiError, mockReq, mockRes, mockNext);
-
-    expect(mockRes.status).toHaveBeenCalledWith(400);
-    expect(mockRes.json).toHaveBeenCalledWith({
-      message: "Invalid request data. Please review the request and try again.",
-      errors: [
-        {
-          message: "Invalid email",
-          field: "email",
-          code: "INVALID_EMAIL",
-        },
-      ],
-    });
-  });
-
-  it("should handle Joi validation errors with unknown code", () => {
-    const joiError = new Joi.ValidationError("Validation error", [
       {
-        message: "Invalid email",
-        context: { label: "email" },
+        message: "Password is too short,STRING_MIN",
+        context: { label: "password" },
       },
     ]);
 
@@ -47,11 +28,76 @@ describe("errorHandler middleware", () => {
     expect(mockRes.json).toHaveBeenCalledWith({
       message: "Invalid request data. Please review the request and try again.",
       errors: [
-        {
-          message: "Invalid email",
-          field: "email",
-          code: "UNKNOWN_CODE",
-        },
+        { message: "Invalid email", field: "email", code: "INVALID_EMAIL" },
+        { message: "Password is too short", field: "password", code: "STRING_MIN" },
+      ],
+    });
+  });
+
+  it("should handle Joi required field validation error", () => {
+    const joiError = new Joi.ValidationError("Validation error", [
+      {
+        message: '"username" is required,MISSING',
+        context: { label: "username" },
+      },
+    ]);
+
+    errorHandler(joiError, mockReq, mockRes, mockNext);
+
+    expect(mockRes.status).toHaveBeenCalledWith(400);
+    expect(mockRes.json).toHaveBeenCalledWith({
+      message: "Invalid request data. Please review the request and try again.",
+      errors: [
+        { message: '"username" is required', field: "username", code: "MISSING" },
+      ],
+    });
+  });
+
+  it("should handle Joi validation errors with missing or unknown code", () => {
+    const joiError = new Joi.ValidationError("Validation error", [
+      {
+        message: "Invalid email format",
+        context: { label: "email" },
+      },
+      {
+        message: "Age must be a number",
+        context: { label: "age" }, 
+      },
+    ]);
+  
+    errorHandler(joiError, mockReq, mockRes, mockNext);
+  
+    expect(mockRes.status).toHaveBeenCalledWith(400);
+    expect(mockRes.json).toHaveBeenCalledWith({
+      message: "Invalid request data. Please review the request and try again.",
+      errors: [
+        { message: "Invalid email format", field: "email", code: "UNKNOWN_CODE" },
+        { message: "Age must be a number", field: "age", code: "UNKNOWN_CODE" },
+      ],
+    });
+  });
+  
+
+  it("should handle Joi min and max validation errors", () => {
+    const joiError = new Joi.ValidationError("Validation error", [
+      {
+        message: '"age" must be greater than 18,NUMBER_MIN',
+        context: { label: "age" },
+      },
+      {
+        message: '"name" length must be at least 3 characters long,STRING_MIN',
+        context: { label: "name" },
+      },
+    ]);
+
+    errorHandler(joiError, mockReq, mockRes, mockNext);
+
+    expect(mockRes.status).toHaveBeenCalledWith(400);
+    expect(mockRes.json).toHaveBeenCalledWith({
+      message: "Invalid request data. Please review the request and try again.",
+      errors: [
+        { message: '"age" must be greater than 18', field: "age", code: "NUMBER_MIN" },
+        { message: '"name" length must be at least 3 characters long', field: "name", code: "STRING_MIN" },
       ],
     });
   });
