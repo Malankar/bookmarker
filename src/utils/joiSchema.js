@@ -11,6 +11,7 @@ const bookmarkSchema = Joi.object({
     'string.base': 'Should be a type of text, INVALID_TYPE',
     'string.empty': 'Cannot be empty, EMPTY',
     'string.uri': 'Must be a valid URI, INVALID_URI',
+    'string.max': 'Should have a maximum length of 2048 characters, TOO_LONG',
     'any.required': 'Field is required, MISSING'
   })
 });

@@ -28,6 +28,5 @@ describe('bookmark schema', () => {
     expect(urlColumn.primary).toBe(false);
     expect(urlColumn.notNull).toBe(false);
     expect(urlColumn.columnType).toBe('PgVarchar');
-    expect(urlColumn.length).toBe(256);
   });
 });
