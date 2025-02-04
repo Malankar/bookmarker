@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import bookmarkService from "../../src/services/bookmarkService";
 import { db } from "../../src/db/db.js";
+import { v4 as uuidv4 } from "uuid";
 
 vi.mock("../../src/db/db.js");
 
@@ -8,8 +9,8 @@ describe("bookmarkService", () => {
   describe("getAllBookmarks", () => {
     it("should return all bookmarks", async () => {
       const mockBookmarks = [
-        { id: "1", title: "Bookmark 1", url: "http://example.com/1" },
-        { id: "2", title: "Bookmark 2", url: "http://example.com/2" },
+        { id: uuidv4(), title: "Bookmark 1", url: "http://example.com/1" },
+        { id: uuidv4(), title: "Bookmark 2", url: "http://example.com/2" },
       ];
 
       db.select.mockReturnValue({
@@ -31,9 +32,10 @@ describe("bookmarkService", () => {
   });
 
   describe("getBookmarkById", () => {
+    const id = uuidv4();
     it("should return the bookmark with the given id", async () => {
       const mockBookmark = {
-        id: "49fb6870-478f-4a6a-a839-e6e198adfb94",
+        id,
         title: "Bookmark 1",
         url: "http://example.com",
       };
@@ -44,9 +46,7 @@ describe("bookmarkService", () => {
         }),
       });
 
-      const result = await bookmarkService.getBookmarkById(
-        "49fb6870-478f-4a6a-a839-e6e198adfb94"
-      );
+      const result = await bookmarkService.getBookmarkById(id);
       expect(result).toEqual(mockBookmark);
     });
 
@@ -58,7 +58,7 @@ describe("bookmarkService", () => {
       });
 
       await expect(
-        bookmarkService.getBookmarkById("49fb6870-478f-4a6a-a839-e6e198adfb94")
+        bookmarkService.getBookmarkById(id)
       ).rejects.toThrow("Bookmark not found");
     });
 
@@ -73,6 +73,7 @@ describe("bookmarkService", () => {
     it("should create a new bookmark", async () => {
       const title = "Bookmark 1";
       const url = "http://example.com/1";
+      const id = uuidv4();
 
       db.select.mockReturnValue({
         from: vi.fn().mockReturnValue({
@@ -85,25 +86,26 @@ describe("bookmarkService", () => {
           returning: vi
             .fn()
             .mockResolvedValue([
-              { id: "49fb6870-478f-4a6a-a839-e6e198adfb94", title, url },
+              { id, title, url },
             ]),
         }),
       });
 
       const result = await bookmarkService.createBookmark(title, url);
       expect(result).toEqual({
-        id: "49fb6870-478f-4a6a-a839-e6e198adfb94",
+        id,
         title,
         url,
       });
     });
 
     it("should throw ConflictError if a bookmark with the same URL already exists", async () => {
+      const id = uuidv4();
       db.select.mockReturnValue({
         from: vi.fn().mockReturnValue({
           where: vi.fn().mockResolvedValue([
             {
-              id: "49fb6870-478f-4a6a-a839-e6e198adfb94",
+              id,
               title: "Bookmark 1",
               url: "http://example.com/1",
             },
@@ -123,8 +125,9 @@ describe("bookmarkService", () => {
 
   describe("deleteBookmarkById", () => {
     it("should delete the bookmark with the given id", async () => {
+      const id = uuidv4();
       const mockBookmark = {
-        id: "49fb6870-478f-4a6a-a839-e6e198adfb94",
+        id,
         title: "Bookmark 1",
         url: "http://example.com",
       };
@@ -135,13 +138,12 @@ describe("bookmarkService", () => {
         }),
       });
 
-      const result = await bookmarkService.deleteBookmarkById(
-        "49fb6870-478f-4a6a-a839-e6e198adfb94"
-      );
+      const result = await bookmarkService.deleteBookmarkById(id);
       expect(result).toEqual(1);
     });
 
     it("should throw NotFoundError if the bookmark is not found", async () => {
+      const id = uuidv4();
       db.delete.mockReturnValue({
         where: vi.fn().mockReturnValue({
           returning: vi.fn().mockResolvedValue([]),
@@ -149,9 +151,7 @@ describe("bookmarkService", () => {
       });
 
       await expect(
-        bookmarkService.deleteBookmarkById(
-          "49fb6870-478f-4a6a-a839-e6e198adfb94"
-        )
+        bookmarkService.deleteBookmarkById(id)
       ).rejects.toThrow("Bookmark not found");
     });
 
