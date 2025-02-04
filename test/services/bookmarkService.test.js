@@ -57,9 +57,9 @@ describe("bookmarkService", () => {
         }),
       });
 
-      await expect(
-        bookmarkService.getBookmarkById(id)
-      ).rejects.toThrow("Bookmark not found");
+      await expect(bookmarkService.getBookmarkById(id)).rejects.toThrow(
+        "Bookmark not found"
+      );
     });
 
     it("should throw validation error if the id is not a valid GUID", async () => {
@@ -83,11 +83,7 @@ describe("bookmarkService", () => {
 
       db.insert.mockReturnValue({
         values: vi.fn().mockReturnValue({
-          returning: vi
-            .fn()
-            .mockResolvedValue([
-              { id, title, url },
-            ]),
+          returning: vi.fn().mockResolvedValue([{ id, title, url }]),
         }),
       });
 
@@ -118,8 +114,29 @@ describe("bookmarkService", () => {
       ).rejects.toThrow("Bookmark with this URL already exists");
     });
 
-    it("should throw validation error if the input data is invalid", async () => {
+    it("should throw validation error if the input data is empty", async () => {
       await expect(bookmarkService.createBookmark("", "")).rejects.toThrow();
+    });
+
+    it("should throw validation error if the title is very long", async () => {
+      await expect(
+        bookmarkService.createBookmark(
+          "JvMCBoNOFndvXATdriLPIHXhNHlyLtJySnfZStevkXbekgbQalWxueEhIJCbfALDGlALVGfisOomVzKBDnGibStlnriWdVaWOpFz",
+          ""
+        )
+      ).rejects.toThrow();
+    });
+
+    it("should throw validation error if the URL is invalid", async () => {
+      await expect(
+        bookmarkService.createBookmark("Bookmark 1", "example.com")
+      ).rejects.toThrow();
+    });
+
+    it("should throw validation error if the title has special characters", async () => {
+      await expect(
+        bookmarkService.createBookmark("$##@$", "http://example.com/1")
+      ).rejects.toThrow();
     });
   });
 
@@ -150,9 +167,9 @@ describe("bookmarkService", () => {
         }),
       });
 
-      await expect(
-        bookmarkService.deleteBookmarkById(id)
-      ).rejects.toThrow("Bookmark not found");
+      await expect(bookmarkService.deleteBookmarkById(id)).rejects.toThrow(
+        "Bookmark not found"
+      );
     });
 
     it("should throw validation error if the id is not a valid GUID", async () => {
