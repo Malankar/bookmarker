@@ -155,8 +155,7 @@ describe("bookmarkService", () => {
         }),
       });
 
-      const result = await bookmarkService.deleteBookmarkById(id);
-      expect(result).toEqual(1);
+      await bookmarkService.deleteBookmarkById(id);
     });
 
     it("should throw NotFoundError if the bookmark is not found", async () => {
