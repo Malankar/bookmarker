@@ -7,6 +7,8 @@ import authPkg from "express-openid-connect";
 const { auth, requiresAuth } = authPkg;
 import dotenv from "dotenv";
 import { authHandler } from "./middleware/authHandler.js";
+import { authConfig } from "./config/authConfig.js";
+import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config();
 
@@ -18,23 +20,7 @@ const __dirname = path.dirname(__filename);
 
 app.use(express.json());
 
-const config = {
-  authRequired: false,
-  auth0Logout: true,
-  secret: process.env.AUTH_SECRET,
-  baseURL: process.env.BASE_URL,
-  clientID: process.env.AUTH_CLIENT_ID,
-  issuerBaseURL: process.env.AUTH_ISSUER_BASE_URL,
-  routes: {
-    login: false,
-  },
-  session: {
-    absoluteDuration: 24 * 60 * 60, // 24 hours
-    rolling: true,
-  },
-};
-
-app.use(auth(config));
+app.use(auth(authConfig));
 
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -43,24 +29,7 @@ app.get("/", requiresAuth(), (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-app.get("/login", (req, res) => {
-  if (req.oidc.isAuthenticated()) {
-    return res.redirect("/profile");
-  }
-  res.oidc.login({
-    returnTo: "/profile",
-  });
-});
-
-// Auth callback handler
-app.get("/callback", (req, res) => {
-  try {
-    res.redirect("/profile");
-  } catch (error) {
-    console.error("Auth callback error:", error);
-    res.redirect("/login");
-  }
-});
+app.use("/", authRoutes);
 
 // Serve the profile.html file
 app.get("/profile", requiresAuth(), (req, res) => {
