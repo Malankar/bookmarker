@@ -3,6 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import bookmarkRoutes from './routes/bookmarkRoutes.js';
 import errorHandler from './middleware/errorHandler.js';
+import { rateLimiter } from './middleware/rateLimiter.js';
 
 const app = express();
 const port = 3000;
@@ -19,7 +20,7 @@ app.get('/', (req, res) => {
 });
 
 // Use the bookmark routes
-app.use('/v1', bookmarkRoutes);
+app.use('/v1', rateLimiter, bookmarkRoutes);
 
 app.use(errorHandler)
 
