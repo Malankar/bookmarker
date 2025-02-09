@@ -3,14 +3,12 @@ import path from "path";
 import { fileURLToPath } from "url";
 import bookmarkRoutes from "./routes/bookmarkRoutes.js";
 import errorHandler from "./middleware/errorHandler.js";
+import { rateLimiter } from "./middleware/rateLimiter.js";
 import authPkg from "express-openid-connect";
 const { auth, requiresAuth } = authPkg;
-import dotenv from "dotenv";
 import { authHandler } from "./middleware/authHandler.js";
 import { authConfig } from "./config/authConfig.js";
 import authRoutes from "./routes/authRoutes.js";
-
-dotenv.config();
 
 const app = express();
 const port = 3000;
@@ -37,7 +35,7 @@ app.get("/profile", requiresAuth(), (req, res) => {
 });
 
 // Use the bookmark routes
-app.use("/v1", authHandler(), bookmarkRoutes);
+app.use("/v1", rateLimiter, authHandler(), bookmarkRoutes);
 
 app.use("/v1/user", authHandler(), (req, res) => {
   res.json({ user: { nickname: req.user.nickname } });

@@ -98,7 +98,6 @@ const deleteBookmarkById = async (id, userId) => {
   if (result.length === 0) {
     throw NotFoundError("Bookmark not found");
   }
-  return result.length;
 };
 
 const bookmarkService = {

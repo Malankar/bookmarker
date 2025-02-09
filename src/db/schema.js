@@ -4,7 +4,7 @@ const bookmark = pgTable('bookmark', {
   id: uuid('id').primaryKey(),
   userId: text('userId'),
   title: text('title'),
-  url: varchar('url', { length: 256 }),
+  url: varchar('url'),
 });
 
 export { bookmark };
