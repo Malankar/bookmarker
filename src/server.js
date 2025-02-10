@@ -6,7 +6,6 @@ import errorHandler from "./middleware/errorHandler.js";
 import { rateLimiter } from "./middleware/rateLimiter.js";
 import authPkg from "express-openid-connect";
 const { auth, requiresAuth } = authPkg;
-import { authHandler } from "./middleware/authHandler.js";
 import { authConfig } from "./config/authConfig.js";
 import authRoutes from "./routes/authRoutes.js";
 
@@ -35,10 +34,10 @@ app.get("/profile", requiresAuth(), (req, res) => {
 });
 
 // Use the bookmark routes
-app.use("/v1", rateLimiter, authHandler(), bookmarkRoutes);
+app.use("/v1", rateLimiter, requiresAuth(), bookmarkRoutes);
 
-app.use("/v1/user", authHandler(), (req, res) => {
-  res.json({ user: { nickname: req.user.nickname } });
+app.use("/v1/user", requiresAuth(), (req, res) => {
+  res.json({ user: { nickname: req.oidc.user.nickname } });
 });
 
 // Auth error handling middleware
