@@ -14,6 +14,13 @@ const getAllBookmarks = async (userId) => {
   return result;
 };
 
+const getAllBookmarksWithoutUser = async () => {
+  const result = await db
+    .select()
+    .from(bookmark);
+  return result;
+};
+
 const getBookmarkById = async (id, userId) => {
   await Joi.string()
     .uuid()
@@ -27,6 +34,24 @@ const getBookmarkById = async (id, userId) => {
     .select()
     .from(bookmark)
     .where(and(eq(bookmark.id, id), eq(bookmark.userId, userId)));
+  if (result.length === 0) {
+    throw NotFoundError("Bookmark not found");
+  }
+  return result[0];
+};
+
+const getBookmarkByIdWithoutUser = async (id, userId) => {
+  await Joi.string()
+    .uuid()
+    .required()
+    .label("id")
+    .messages({
+      "string.guid": "Must be a valid GUID",
+    })
+    .validateAsync(id);
+  const result = await db
+    .select()
+    .from(bookmark);
   if (result.length === 0) {
     throw NotFoundError("Bookmark not found");
   }
@@ -98,11 +123,12 @@ const deleteBookmarkById = async (id, userId) => {
   if (result.length === 0) {
     throw NotFoundError("Bookmark not found");
   }
-  return result.length;
 };
 
 const bookmarkService = {
   getAllBookmarks,
+  getAllBookmarksWithoutUser,
+  getBookmarkByIdWithoutUser,
   getBookmarkById,
   createBookmark,
   updateBookmarkById,
