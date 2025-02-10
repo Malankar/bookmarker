@@ -1,3 +1,6 @@
+import { auth } from "express-oauth2-jwt-bearer";
+import { jwtConfig } from "../config/authConfig.js";
+
 const authHandler = () => {
   return (req, res, next) => {
     if (!req.oidc.isAuthenticated()) {
@@ -16,4 +19,6 @@ const authHandler = () => {
   };
 };
 
-export { authHandler };
+const jwtCheck = auth(jwtConfig);
+
+export { authHandler, jwtCheck };

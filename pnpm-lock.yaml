@@ -21,6 +21,9 @@ importers:
       express-async-handler:
         specifier: ^1.2.0
         version: 1.2.0
+      express-oauth2-jwt-bearer:
+        specifier: ^1.6.0
+        version: 1.6.0
       express-openid-connect:
         specifier: ^2.17.1
         version: 2.17.1(express@4.21.0)
@@ -1073,6 +1076,10 @@ packages:
   express-async-handler@1.2.0:
     resolution: {integrity: sha512-rCSVtPXRmQSW8rmik/AIb2P0op6l7r1fMW538yyvTMltCO4xQEWMmobfrIxN2V1/mVrgxB8Az3reYF6yUZw37w==}
 
+  express-oauth2-jwt-bearer@1.6.0:
+    resolution: {integrity: sha512-HXnez7vocYlOqlfF3ozPcf/WE3zxT7zfUNfeg5FHJnvNwhBYlNXiPOvuCtBalis8xcigvwtInzEKhBuH87+9ug==}
+    engines: {node: ^12.19.0 || ^14.15.0 || ^16.13.0 || ^18.12.0 || ^20.2.0}
+
   express-openid-connect@2.17.1:
     resolution: {integrity: sha512-5pVK6PNV09x6UN29R9Mer0XF3hwQq2HxiFsjZvLuIQ9ezeTUGbqrefzBOpzciz1S/1WWVaVPDIcj4EBpD8WB3Q==}
     engines: {node: ^10.19.0 || >=12.0.0 < 13 || >=13.7.0 < 14 || >= 14.2.0}
@@ -1268,6 +1275,9 @@ packages:
   jose@2.0.7:
     resolution: {integrity: sha512-5hFWIigKqC+e/lRyQhfnirrAqUdIPMB7SJRqflJaO29dW7q5DFvH1XCSTmv6PQ6pb++0k6MJlLRoS0Wv4s38Wg==}
     engines: {node: '>=10.13.0 < 13 || >=13.7.0'}
+
+  jose@4.15.9:
+    resolution: {integrity: sha512-1vUQX+IdDMVPj4k8kOxgUqlcK518yluMuGZwqlr44FS1ppZB/5GWh4rZG89erpOBOJjU/OBsnCVFfapsRz6nEA==}
 
   json-buffer@3.0.1:
     resolution: {integrity: sha512-4bV5BfR2mqfQTJm+V5tPPdf+ZpuhiIvTuAB5g8kcrXOZpTT/QwwVRWBywX1ozr6lEuPdbHxwaJlm9G6mI2sfSQ==}
@@ -2500,6 +2510,10 @@ snapshots:
 
   express-async-handler@1.2.0: {}
 
+  express-oauth2-jwt-bearer@1.6.0:
+    dependencies:
+      jose: 4.15.9
+
   express-openid-connect@2.17.1(express@4.21.0):
     dependencies:
       base64url: 3.0.1
@@ -2759,6 +2773,8 @@ snapshots:
   jose@2.0.7:
     dependencies:
       '@panva/asn1.js': 1.0.0
+
+  jose@4.15.9: {}
 
   json-buffer@3.0.1: {}
 

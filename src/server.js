@@ -35,7 +35,7 @@ app.get("/profile", requiresAuth(), (req, res) => {
 });
 
 // Use the bookmark routes
-app.use("/v1", rateLimiter, authHandler(), bookmarkRoutes);
+app.use("/v1", rateLimiter, bookmarkRoutes);
 
 app.use("/v1/user", authHandler(), (req, res) => {
   res.json({ user: { nickname: req.user.nickname } });
