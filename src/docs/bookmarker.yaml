@@ -1,0 +1,240 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Bookmarker
+  license:
+    name: MIT
+servers:
+  - url: http://localhost:3000/v1
+    description: Development server
+paths:
+  /bookmarks:
+    get:
+      summary: List all bookmarks
+      operationId: listBookmarks
+      tags:
+        - bookmarks
+      responses:
+        200:
+          description: An array of bookmarks
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bookmarks"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+    post:
+      summary: Create a bookmark
+      operationId: createBookmark
+      tags:
+        - bookmarks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                url:
+                  type: string
+              required:
+                - title
+                - url
+      responses:
+        201:
+          description: Null response
+        400:
+          $ref: "#/components/responses/BadRequestError"
+        415:
+          $ref: "#/components/responses/UnsupportedMediaTypeError"
+        409:
+          $ref: "#/components/responses/ConflictError"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+  /bookmarks/{id}:
+    get:
+      summary: Info for a specific bookmark
+      operationId: showBookmarkById
+      tags:
+        - bookmarks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the bookmark to retrieve
+          schema:
+            type: string
+      responses:
+        200:
+          description: Bookmark info of the specified id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bookmark"
+        400:
+          $ref: "#/components/responses/BadRequestError"
+        404:
+          $ref: "#/components/responses/NotFoundError"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+    put:
+      summary: Update specific bookmark
+      operationId: updateBookmarkById
+      tags:
+        - bookmarks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the bookmark to update
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                url:
+                  type: string
+              required:
+                - title
+                - url
+      responses:
+        200:
+          description: Bookmark info of the updated id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bookmark"
+        400:
+          $ref: "#/components/responses/BadRequestError"
+        404:
+          $ref: "#/components/responses/NotFoundError"
+        415:
+          $ref: "#/components/responses/UnsupportedMediaTypeError"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+    delete:
+      summary: Delete specific bookmark
+      operationId: deleteBookmarkById
+      tags:
+        - bookmarks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the bookmark to retrieve
+          schema:
+            type: string
+      responses:
+        200:
+          description: Bookmark info of the deleted id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bookmark"
+        400:
+          $ref: "#/components/responses/BadRequestError"
+        404:
+          $ref: "#/components/responses/NotFoundError"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+components:
+  schemas:
+    Bookmark:
+      required:
+        - id
+        - title
+        - url
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        url:
+          type: string
+    Bookmarks:
+      type: array
+      items:
+        $ref: "#/components/schemas/Bookmark"
+    BadRequestError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Invalid request data. Please review the request and try again."
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Must be a valid GUID"
+              field:
+                type: string
+                example: "id"
+              code:
+                type: string
+                example: "INVALID_UUID"
+    UnsupportedMediaTypeError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Content-Type must be application/json"
+    InternalServerError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Internal server error. Please try again later."
+    NotFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "The requested resource was not found."
+    ConflictError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "The request could not be completed due to a conflict with the current state of the target resource."
+  responses:
+    BadRequestError:
+      description: Invalid request data
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BadRequestError"
+    UnsupportedMediaTypeError:
+      description: Content-Type must be application/json
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UnsupportedMediaTypeError"
+    InternalServerError:
+      description: Internal server error. Please try again later.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/InternalServerError"
+    NotFoundError:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/NotFoundError"
+    ConflictError:
+      description: The request could not be completed due to a conflict with the current state of the target resource.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ConflictError"
