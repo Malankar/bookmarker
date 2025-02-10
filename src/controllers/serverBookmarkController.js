@@ -7,6 +7,7 @@ const getAllBookmarks = asyncHandler(async (req, res) => {
 });
 
 const getBookmarkById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
   const data = await bookmarkService.getBookmarkByIdWithoutUser(id);
   if (!data) {
     return res.status(404).json({
@@ -18,7 +19,7 @@ const getBookmarkById = asyncHandler(async (req, res) => {
 
 const bookmarkController = {
   getAllBookmarks,
-  getBookmarkById
+  getBookmarkById,
 };
 
 export default bookmarkController;
