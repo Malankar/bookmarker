@@ -18,8 +18,6 @@ const port = 3000;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const file = readFileSync("src/docs/bookmarker.yaml", "utf8");
-const swaggerDocument = YAML.parse(file);
 
 app.use(express.json());
 
@@ -46,12 +44,14 @@ app.use("/v1/user", authHandler(), (req, res) => {
   res.json({ user: { nickname: req.user.nickname } });
 });
 
-app.use(
-  "/api-docs",
-  authHandler(),
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerDocument)
-);
+const file = readFileSync("src/docs/bookmarker.yaml", "utf8");
+const swaggerDocument = YAML.parse(file);
+const serverFile = readFileSync("src/docs/bookmarkerServer.yaml", "utf8");
+const serverSwaggerDocument = YAML.parse(serverFile);
+
+app.use("/user-docs", authHandler(), swaggerUi.serveFiles(swaggerDocument), swaggerUi.setup(swaggerDocument));
+
+app.use("/server-docs", swaggerUi.serveFiles(serverSwaggerDocument), swaggerUi.setup(serverSwaggerDocument));
 
 // Auth error handling middleware
 app.use((err, req, res, next) => {

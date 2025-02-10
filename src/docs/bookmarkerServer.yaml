@@ -1,0 +1,166 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Bookmarker Server
+  license:
+    name: MIT
+servers:
+  - url: http://localhost:3000/v1/api
+    description: Development server
+security:
+  - BearerAuth: []
+paths:
+  /bookmarks:
+    get:
+      summary: List all bookmarks 
+      operationId: listBookmarks
+      tags:
+        - bookmarks
+      responses:
+        200:
+          description: An array of bookmarks
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bookmarks"
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+  /bookmarks/{id}:
+    get:
+      summary: Info for a specific bookmark
+      operationId: showBookmarkById
+      tags:
+        - bookmarks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the bookmark to retrieve
+          schema:
+            type: string
+      responses:
+        200:
+          description: Bookmark info of the specified id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bookmark"
+        400:
+          $ref: "#/components/responses/BadRequestError"
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+        404:
+          $ref: "#/components/responses/NotFoundError"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    Bookmark:
+      required:
+        - id
+        - title
+        - url
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        url:
+          type: string
+    Bookmarks:
+      type: array
+      items:
+        $ref: "#/components/schemas/Bookmark"
+    BadRequestError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Invalid request data. Please review the request and try again."
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Must be a valid GUID"
+              field:
+                type: string
+                example: "id"
+              code:
+                type: string
+                example: "INVALID_UUID"
+    UnsupportedMediaTypeError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Content-Type must be application/json"
+    InternalServerError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Internal server error. Please try again later."
+    UnauthorizedError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Authentication error"
+    NotFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "The requested resource was not found."
+    ConflictError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "The request could not be completed due to a conflict with the current state of the target resource."
+  responses:
+    BadRequestError:
+      description: Invalid request data
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BadRequestError"
+    UnsupportedMediaTypeError:
+      description: Content-Type must be application/json
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UnsupportedMediaTypeError"
+    InternalServerError:
+      description: Internal server error. Please try again later.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/InternalServerError"
+    UnauthorizedError:
+      description: Authentication error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UnauthorizedError"
+    NotFoundError:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/NotFoundError"
+    ConflictError:
+      description: The request could not be completed due to a conflict with the current state of the target resource.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ConflictError"
