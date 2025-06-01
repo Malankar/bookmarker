@@ -1,3 +1,5 @@
+let userData = null;
+
 // DOM elements
 const bookmarkForm = document.getElementById("bookmarkForm");
 const bookmarksList = document.getElementById("bookmarksList");
@@ -42,10 +44,14 @@ function addBookmark(e) {
 
 // Display bookmarks
 async function displayBookmarks() {
+  if(!userData){
+    fetchUserData();
+  }
+
   const response = await fetch("/v1/bookmarks");
   const bookmarks = await response.json();
   bookmarksList.innerHTML = "";
-  bookmarks?.data?.forEach((bookmark) => {
+  bookmarks?.forEach((bookmark) => {
     let bookmarkId = bookmark.id;
     bookmarksList.innerHTML += `
       <div class="bookmark">
@@ -54,6 +60,18 @@ async function displayBookmarks() {
       </div>
     `;
   });
+}
+
+async function fetchUserData() {
+  try {
+      const response = await fetch('/v1/user');
+      const data = await response.json();
+      userData = data.user;
+      profilePhoto.src = `https://robohash.org/${userData.nickname}?set=set3`;
+      profilePhoto.style.display = 'block';
+  } catch (error) {
+      console.error('Error fetching user data:', error);
+  }
 }
 
 // Delete bookmark
