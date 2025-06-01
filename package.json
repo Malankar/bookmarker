@@ -13,6 +13,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@sentry/node": "^9.2.0",
+    "@sentry/profiling-node": "^9.2.0",
     "drizzle-orm": "^0.40.0",
     "express": "^4.21.0",
     "express-async-handler": "^1.2.0",
