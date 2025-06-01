@@ -13,6 +13,7 @@ import swaggerUi from "swagger-ui-express";
 import { readFileSync } from "fs";
 import { authConfig } from "./config/authConfig.js";
 import authRoutes from "./routes/authRoutes.js";
+import helmet from "helmet";
 
 const app = express();
 const port = 3000;
@@ -21,6 +22,16 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(express.json());
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        imgSrc: ["'self'", "https://robohash.org"],
+      },
+    },
+  })
+);
 
 app.use(auth(authConfig));
 
