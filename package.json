@@ -18,7 +18,7 @@
     "drizzle-orm": "^0.44.3",
     "express": "^4.21.0",
     "express-async-handler": "^1.2.0",
-    "express-oauth2-jwt-bearer": "^1.6.0",
+    "express-oauth2-jwt-bearer": "^1.7.1",
     "express-openid-connect": "^2.19.2",
     "express-rate-limit": "^7.4.0",
     "helmet": "^8.0.0",
